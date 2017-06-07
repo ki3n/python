@@ -6,7 +6,7 @@
 - [ ] CSS Intermediate
 - [ ] JavaScript
 - [ ] JavaScript Advanced
-- [ ] DataStructures & Algorithms
+- [ ] DataStructures & Algorithms (JavaScript)
 - [ ] Node & Express
 - [ ] React
 - [ ] Python
