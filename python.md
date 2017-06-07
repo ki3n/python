@@ -1,15 +1,22 @@
 <h1>Python Fundamentals I & II </h1>
-From Rithm School.
-## To Learn: 
-- [ ] Mercury
-- [x] Venus
-- [x] Earth (Orbit/Moon)
-- [x] Mars
-- [ ] Jupiter
-- [ ] Saturn
-- [ ] Uranus
-- [ ] Neptune
-- [ ] Comet Haley
+Topics Covered
+
+ <ul>
+ <li>Variables and Data Types</li>
+  <li>Conditional Logic</li>
+   <li>Lists and Dictionaries</li>
+    <li>Functions</li>
+
+ <li>Modules and Debugging</li>
+  <li>Object Oriented Programmings</li>
+   <li>File I/O</li>
+    <li>Generators, Iterators and Decorators</li>
+     <li>Lambdas and Dates</li>
+      <li>Variables and Data Types</li>
+       <li>Web Scraping</li>
+        
+ </ul>
+ 
 
 <h1>Python History and Installation</h1>
 <p>By the end of this chapter, you should be able to:</p>
