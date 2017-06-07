@@ -1314,7 +1314,7 @@ When you're ready, move on to Functions Basics
 
 <h1> Functions Basics. </h1>
 
-      <h1>Functions</h1>
+<h3>Functions</h3>
 
 <h3>Objectives:</h3>
 
@@ -2141,7 +2141,7 @@ When you're ready, move on to Useful Python Modules
 
 <h1>Useful Python Modules</h1>
 
-     <h3>Objectives</h3>
+<h3>Objectives</h3>
 
 <p>By the end of this chapter, you should be able to:</p>
 
@@ -2281,7 +2281,7 @@ When you're ready, move on to Debugging and Modules Exercises
 
 <h1> Debugging and Modules Exercises</h1>
 
-    <ul>
+<ul>
 <li>What is a module?</li>
 <li>List three ways to import a module in Python.</li>
 <li>What is the purpose of importing?</li>
