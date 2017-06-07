@@ -2319,4 +2319,1315 @@ When you're ready, move on to Debugging and Modules Exercises
 
 <p>For solutions to these exercises, click <a target="_blank" href="https://github.com/rithmschool/python_fundamentals_part_1_solutions/blob/master/python_debugging_and_modules/solutions.md">here</a>.</p>
 
+<h1>Introduction to Object Oriented Programming in Python. </h1>
 
+<h3>Objectives:</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Describe OOP without talking about code</li>
+<li>Describe what encapsulation is</li>
+<li>Describe what abstraction is</li>
+<li>Create classes using Python</li>
+<li>Write class and instance methods </li>
+</ul>
+
+<p>In Python 3, everything is an object! We can examine what kind of object using the <code>type()</code> function. We&#39;ve seen examples of this with built-in data types like booleans, strings, and integers. In this chapter, we&#39;ll create our own data types, in a way, using <em>classes</em>. Any instances of that class that we create will have a type equal to that class.</p>
+
+<h3>What is Object Oriented Programming?</h3>
+
+<p>Object oriented programming is a method of programming that attempts to model some process or thing in the world as a <strong>class</strong> or <strong>object</strong>. Conceptually, you can think of a class or object as something that has data and can perform operations on that data.  With object oriented programming, the goal is to <em>encapsulate</em> your code into logical groupings using classes so that you can reason about your code at a higher level. Before we get ahead of ourselves, though, let&#39;s define some terminology and see an example:</p>
+
+<p><strong>Class</strong> - A blueprint for objects. Classes can contain methods and properties. We commonly use classes to reduce code duplication.  </p>
+
+<p><strong>Instance</strong> - objects that are made from a class by calling the class. Instances share a similar structure because they all come from the same blueprint (i.e. class).</p>
+
+<h3>Poker Example</h3>
+
+<p>Say we want to model a game of poker in our program.  We could write the program using a list to represent the deck of cards, and then other lists to represent what each player has in their hand.  Then we&#39;d have to write a lot of functions to do things like deal, draw cards, see who wins, etc.</p>
+
+<p>When you end up writing large functions and lots of code in one file, there is usually a better way to organize your code.  Instead of trying to do everything at once, we could <strong>separate concerns</strong>.</p>
+
+<p>When thinking about a game of poker, some larger processes and objects stand out that you will want to capture in your code:</p>
+
+<ul>
+<li>Card</li>
+<li>Deck of cards</li>
+<li>Poker hand</li>
+<li>Poker game</li>
+<li>Discard pile (maybe)</li>
+<li>Player</li>
+<li>Bets</li>
+</ul>
+
+<p>Each one of these components could be a class in your program.  Let&#39;s pick one of the potential classes and figure out the data that it will hold and the functions that it should be able to perform:</p>
+
+<p><strong>Deck of cards</strong></p>
+
+<ul>
+<li>Cards - the deck should have 52 different playing cards</li>
+<li>Shuffle - the deck should be able to shuffle itself</li>
+<li>Deal a card - remove a card from the deck and deal it to a player</li>
+<li>Deal a hand - The deck may also be used to deal a hand to a player, or a set of players</li>
+</ul>
+
+<p>Now that we can conceptualize how a problem can be broken down into classes, let&#39;s talk about why programming this way can be useful.</p>
+
+<h3>Encapsulation</h3>
+
+<p>Encapsulation is the idea that data and processes on that data are owned by a class.  Other functions or classes outside of that class should not be able to directly change the data.</p>
+
+<p>In our deck class, we have 52 cards. The player class should not be able to choose any card he or she wants from the deck or change the order of a deck manually.  Instead a player can only be dealt a hand.  The contents of the deck is said to be <em>encapsulated</em> into the deck class because the deck owns the list of cards and it will not allow other classes to access it directly.</p>
+
+<h3>Abstraction</h3>
+
+<p>Abstraction is the result of a good object oriented design.  Rather than thinking about the details of how a class works internally, you can think about it at a higher level.  You can see all of the functions that are made available by the class and understand what the class does without having to see all of the code or worry about implementation details.</p>
+
+<p>Continuing with our example, if you had a deck of cards class and you saw that you could call the <code>.shuffle()</code> function or the <code>.deal()</code> function, you would have a good understanding of what the class does without having to understand how the functions are working internally.</p>
+
+<p>Other hallmarks of object oriented programming include inheritance and polymorphism. We&#39;ll discuss these later.</p>
+
+<h3>Creating a class</h3>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Vehicle</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>,make,model,year):
+        <span class="predefined-constant">self</span>.make = make
+        <span class="predefined-constant">self</span>.model = model
+        <span class="predefined-constant">self</span>.year = year
+</pre></div>
+</div>
+
+<p>Every class needs an <code>__init__</code> method. Every time you create an instance from a class in Python, that instance will get run through the <code>__init__</code> method. <code>self</code> inside of this method refers to the instance.</p>
+
+<p>To create an instance from a class, we instantiate the class using () and pass in the values to initialize the instance (these are defined in <code>__init__</code>).</p>
+<div class="CodeRay">
+  <div class="code"><pre>v = Vehicle(<span class="string"><span class="delimiter">'</span><span class="content">toyota</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">corolla</span><span class="delimiter">'</span></span>, <span class="integer">2012</span>)
+</pre></div>
+</div>
+
+<h3>Methods and properties for instances</h3>
+
+<p>To add methods on instances, we simply define them in the class. When defining instance methods, the first argument should always be called <code>self</code>, and refers to the current instance. If you need to pass other arguments, do so after passing in <code>self</code>. Note that when you call these instance methods, you never pass in <code>self</code>. Here are a couple of examples: </p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Person</span>():
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>, first_name, last_name):
+        <span class="predefined-constant">self</span>.first_name = first_name
+        <span class="predefined-constant">self</span>.last_name = last_name
+
+    <span class="keyword">def</span> <span class="function">full_name</span>(<span class="predefined-constant">self</span>):
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">My name is {} {}</span><span class="delimiter">&quot;</span></span>.format(<span class="predefined-constant">self</span>.first_name, <span class="predefined-constant">self</span>.last_name)
+
+    <span class="keyword">def</span> <span class="function">likes</span>(<span class="predefined-constant">self</span>, thing):
+          <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">{} likes {}!</span><span class="delimiter">&quot;</span></span>.format(<span class="predefined-constant">self</span>.first_name, thing)
+
+p = Person(<span class="string"><span class="delimiter">'</span><span class="content">Tim</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Garcia</span><span class="delimiter">'</span></span>)
+
+p.full_name() <span class="comment"># My name is Tim Garcia</span>
+p.likes(<span class="string"><span class="delimiter">&quot;</span><span class="content">computers</span><span class="delimiter">&quot;</span></span>) <span class="comment"># Tim likes computers!</span>
+</pre></div>
+</div>
+
+<p>Notice that we <strong>must</strong> add <code>self</code> as the first parameter to each of our instance methods.</p>
+
+<h3>Writing Class Methods</h3>
+
+<p>We&#39;ve seen how to add methods on instances. But what if we want to add a method on the class itself? To do this, we use a decorator! We&#39;ll talk more about decorators later. For now, it&#39;s enough to know that there are two decorators we can use to create class methods:</p>
+
+<p><strong>@classmethod</strong></p>
+
+<p>One way use to use the <code>@classmethod</code> decorator:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Person</span>():
+
+    <span class="decorator">@classmethod</span>
+    <span class="keyword">def</span> <span class="function">say_hello</span>(cls):
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">HI!</span><span class="delimiter">&quot;</span></span>
+
+Person.say_hello() <span class="comment"># &quot;HI!&quot;</span>
+</pre></div>
+</div>
+
+<p>Similar to instance methods, the first argument in a class method has special meaning. For an instance method, the first argument refers to the instance, and is called <code>self</code>. For a class method, the first argument refers to the class, and is typically written as <code>cls</code>.</p>
+
+<p><strong>@staticmethod</strong></p>
+
+<p>Another decorator we can use is the <code>@staticmethod</code> decorator:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Person</span>():
+
+    <span class="decorator">@staticmethod</span>
+    <span class="keyword">def</span> <span class="function">say_hello</span>():
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">HI!</span><span class="delimiter">&quot;</span></span>
+
+Person.say_hello() <span class="comment"># &quot;HI!&quot;</span>
+</pre></div>
+</div>
+
+<p>So what are the differences between these two? See if you can spot it and head over <a target="_blank" href="http://stackoverflow.com/questions/136097/what-is-the-difference-between-staticmethod-and-classmethod-in-python">here</a> after!</p>
+
+When you're ready, move on to Inheritance and MRO
+
+<h1>Inheritance and MRO.</h1>
+
+<h3>Objectives</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Explain what inheritance is and how it is used to reduce code duplication</li>
+<li>Understand what the <code>super</code> keyword does</li>
+<li>Define MRO and explain how it is used in Python 3</li>
+</ul>
+
+<h3>Inheritance and <code>super</code></h3>
+
+<p>In many languages that support object-oriented programming, you can define a class which inherits from another class. Python takes things even further; in Python, we can do what is called multiple inheritance. This means that one class can inherit from many other classes! </p>
+
+<p>Here&#39;s an example of single inheritance: </p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Vehicle</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>,make,model,year):
+        <span class="predefined-constant">self</span>.make = make
+        <span class="predefined-constant">self</span>.model = model
+        <span class="predefined-constant">self</span>.year = year
+    <span class="keyword">def</span> <span class="function">honk</span>(<span class="predefined-constant">self</span>):
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Beep!</span><span class="delimiter">&quot;</span></span>
+
+<span class="keyword">class</span> <span class="class">Car</span>(Vehicle):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>,make,model,year):
+        <span class="predefined">super</span>().__init__(make,model,year) <span class="comment"># this is python3 specific!</span>
+        <span class="predefined-constant">self</span>.wheels = <span class="integer">4</span>
+</pre></div>
+</div>
+
+<p>Notice that when we define the <code>Car</code> class, we pass in the <code>Vehicle</code> class. Then, inside of the car&#39;s <code>__init__</code> method we make a call to <code>super().__init__</code>, which refers to the parent class&#39;s <code>__init__</code> method. Calling <code>super</code> in this way ensures that car instances are assigned a <code>make</code>, <code>model</code>, and <code>year</code>, but saves us from having to repeat ourselves in the logic for the <code>Car</code>&#39;s <code>__init__</code> method.</p>
+
+<p>Inheritance also saves us from having to duplicate instance methods: instances of the child class automatically gain access to instance methods in the parent class. Take a look:</p>
+<div class="CodeRay">
+  <div class="code"><pre>mack_truck = Vehicle(<span class="string"><span class="delimiter">&quot;</span><span class="content">Mack</span><span class="delimiter">&quot;</span></span>,<span class="string"><span class="delimiter">&quot;</span><span class="content">Titan</span><span class="delimiter">&quot;</span></span>,<span class="integer">2015</span>)
+car = Car(<span class="string"><span class="delimiter">&quot;</span><span class="content">Honda</span><span class="delimiter">&quot;</span></span>,<span class="string"><span class="delimiter">&quot;</span><span class="content">Civic</span><span class="delimiter">&quot;</span></span>,<span class="integer">2004</span>)
+
+mack_truck.honk() <span class="comment"># &quot;Beep!&quot;</span>
+car.honk() <span class="comment"># &quot;Beep!&quot;</span>
+</pre></div>
+</div>
+
+<p>In this case, we don&#39;t need to define a <code>honk</code> method for cars. Since the <code>Car</code> class inherits from <code>Vehicle</code>, any car instances will automatically have access to the <code>honk</code> method from the <code>Vehicle</code> class.</p>
+
+<h3>Multiple Inheritance and MRO</h3>
+
+<p>The car and vehicle example is fine when we want a class to inherit from one other class. But what if we want it to inherit from multiple classes? In this case, Python lets us do multiple inheritance by passing in multiple classes when we create a new class! Here&#39;s an example:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Aquatic</span>:
+  <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>,name):
+    <span class="predefined-constant">self</span>.name = name
+
+  <span class="keyword">def</span> <span class="function">swim</span>(<span class="predefined-constant">self</span>):
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">{} is swimming</span><span class="delimiter">&quot;</span></span>.format(<span class="predefined-constant">self</span>.name)
+
+  <span class="keyword">def</span> <span class="function">greet</span>(<span class="predefined-constant">self</span>):
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">I am {} of the sea!</span><span class="delimiter">&quot;</span></span>.format(<span class="predefined-constant">self</span>.name)
+
+<span class="keyword">class</span> <span class="class">Ambulatory</span>:
+  <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>,name):
+    <span class="predefined-constant">self</span>.name = name
+
+  <span class="keyword">def</span> <span class="function">walk</span>(<span class="predefined-constant">self</span>):
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">{} is walking</span><span class="delimiter">&quot;</span></span>.format(<span class="predefined-constant">self</span>.name)
+
+  <span class="keyword">def</span> <span class="function">greet</span>(<span class="predefined-constant">self</span>):
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">I am {} of the land!</span><span class="delimiter">&quot;</span></span>.format(<span class="predefined-constant">self</span>.name)
+
+<span class="keyword">class</span> <span class="class">Penguin</span>(Aquatic, Ambulatory):
+  <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>,name):
+    <span class="predefined">super</span>().__init__(name=name) 
+
+jaws = Aquatic(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jaws</span><span class="delimiter">&quot;</span></span>)
+lassie = Ambulatory(<span class="string"><span class="delimiter">&quot;</span><span class="content">Lassie</span><span class="delimiter">&quot;</span></span>)
+captain_cook = Penguin(<span class="string"><span class="delimiter">&quot;</span><span class="content">Captain Cook</span><span class="delimiter">&quot;</span></span>)
+</pre></div>
+</div>
+
+<p>Here we define two classes: <code>Aquatic</code> (for things that can swim) and <code>Ambulatory</code> (for things that can walk). Instances of the <code>Aquatic</code> class have a <code>name</code>, a <code>swim</code> method, and a <code>greet</code> method. Similarly, instances of the <code>Ambulatory</code> class have a <code>name</code>, a <code>walk</code> method, and a <code>greet</code> method.</p>
+
+<p>We then define a third class called <code>Penguin</code>, which inherits from both <code>Aquatic</code> and <code>Ambulatory</code>. Finally, we create an instance from each of these classes.</p>
+
+<p>Let&#39;s examine what happens when we try to call methods on each of these instances. You should see the following:</p>
+<div class="CodeRay">
+  <div class="code"><pre>jaws.swim() <span class="comment"># 'Jaws is swimming'</span>
+jaws.walk() <span class="comment"># AttributeError: 'Aquatic' object has no attribute 'walk'</span>
+jaws.greet() <span class="comment"># 'I am Jaws of the sea!'</span>
+
+lassie.swim() <span class="comment"># AttributeError: 'Ambulatory' object has no attribute 'swim'</span>
+lassie.walk() <span class="comment"># 'Lassie is walking'</span>
+lassie.greet() <span class="comment"># 'I am Lassie of the land!'</span>
+
+captain_cook.swim() <span class="comment"># 'Captain Cook is swimming'</span>
+captain_cook.walk() <span class="comment"># 'Captain Cook is walking'</span>
+captain_cook.greet() <span class="comment"># 'I am Captain Cook of the sea!'</span>
+</pre></div>
+</div>
+
+<p>Notice that because <code>Penguin</code> inherits from both <code>Aquatic</code> and <code>Ambulatory</code>, instances of the <code>Penguin</code> class have access to both the <code>swim</code> method and the <code>walk</code> method. </p>
+
+<p>What happens with the <code>greet</code> method, though? In this case, there&#39;s a conflict, since both <code>Aquatic</code> and <code>Ambulatory</code> have their own <code>greet</code> methods! In this case, it looks like <code>Penguin</code> inherits the <code>greet</code> method from <code>Aquatic</code> and ignores the <code>greet</code> method from <code>Ambulatory</code>. (Notice that when we defined <code>Penguin</code>, we passed in <code>Aquatic</code> first, and then <code>Ambulatory</code>; what happens if you switch the order?)</p>
+
+<p>So how does Python know where to search for methods? Whenever you create a class, Python sets a <strong>M</strong>ethod <strong>R</strong>esolution <strong>O</strong>rder, or MRO, for that class. This order determines the order in which Python will look for methods on instances of that class. With single inheritance (or even simple examples of multiple inheritance) the order isn&#39;t so hard to deduce, but for really complex multiple inheritance things can get tricky. If you ever need to see what the MRO is for a class, you can take a look at the <code>__mro__</code> attribute for that class, use the <code>mro()</code> method, or, even better, get some <code>help</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>Penguin.__mro__ <span class="comment"># (&lt;class 'multiple.Penguin'&gt;, &lt;class 'multiple.Aquatic'&gt;, &lt;class 'multiple.Ambulatory'&gt;, &lt;class 'object'&gt;)</span>
+
+<span class="comment"># OR</span>
+
+Penguin.mro() <span class="comment"># returns a list to us</span>
+
+<span class="comment"># EVEN BETTER!</span>
+
+help(Penguin) <span class="comment"># gives us a detailed chain </span>
+</pre></div>
+</div>
+
+When you're ready, move on to Special Methods and Polymorphism
+
+<h1>Special Methods and Polymorphism</h1>
+
+<h3>Objectives</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Add special methods to classes</li>
+<li>Define and explain how to implement polymorphism in a class</li>
+<li>Understand how to add custom properties and methods to built in data types in Python</li>
+</ul>
+
+<h3>Special methods for python objects</h3>
+
+<p>When we discuss special (also called &quot;magic&quot;) methods, we are commonly referring to methods that contain a &quot;dunder&quot; (double underscore) like <code>__init__</code>. You have actually used quite a few of these under the hood, but you can implement your own for classes you create. Let&#39;s see a couple:</p>
+
+<p><code>__str__</code> - what is evaluated when <code>print</code> is called</p>
+
+<p><code>__len__</code> - what is evaluated when <code>len</code> is called</p>
+
+<p><code>__del__</code> - what is evaluated when <code>del</code> is called</p>
+
+<p><code>__doc__</code> - see the docstring for a value</p>
+
+<p><code>__class__</code> - see what class created this object</p>
+
+<p>There also exists another method called <code>__repr__</code> which is similar to <code>__str__</code>; you can read about the differences <a target="_blank" href="http://stackoverflow.com/questions/1436703/difference-between-str-and-repr-in-python">here</a></p>
+
+<p>You can read more about these <a target="_blank" href="http://www.diveintopython3.net/special-method-names.html">here</a>. Pay close attention to the differences between <code>__repr__</code>, <code>__str__</code> and <code>__format__</code></p>
+
+<h3>Polymorphism</h3>
+
+<p>One of the key principles in Object Oriented Programming is <em>polymorphism</em>. This is the idea that an object can take on many (poly) forms (morph).</p>
+
+<p>A very common example you will see of Polymorphism is the <code>+</code> operator. If we do <code>5 + 3</code> in Python our result will be 8 as the operator knows to add the two numbers. But if we do <code>&quot;8&quot; + &quot;3&quot;</code> Python knows to concatenate the values since they are strings. This single operator can take on many different forms, depending on the types it is working with! </p>
+
+<p>You can see polymorphism applied when there is the same operation used for objects in different classes. Let&#39;s see another example!</p>
+<div class="CodeRay">
+  <div class="code"><pre>sample_list = [<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>]
+sample_tuple = (<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>)
+sample_string = <span class="string"><span class="delimiter">&quot;</span><span class="content">awesome</span><span class="delimiter">&quot;</span></span>
+
+<span class="predefined">len</span>(sample_list)
+<span class="predefined">len</span>(sample_tuple)
+<span class="predefined">len</span>(sample_string)
+</pre></div>
+</div>
+
+<p>These are three different classes that have the same operation applied to them!</p>
+
+<p>A common implementation of this is to have a method in a base (or parent) class that is overriden by a subclass. Each subclass will have a different implementation of the method. When the superclass/parent class method is called, it chooses which method to run depending on the subclass/child class. Let&#39;s look at a common example:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Pet</span>():
+    <span class="keyword">def</span> <span class="function">talk</span>:
+        <span class="keyword">raise</span> <span class="exception">NotImplementedError</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Subclass needs to implement this method</span><span class="delimiter">&quot;</span></span>)
+
+<span class="keyword">class</span> <span class="class">Dog</span>(Pet):
+    <span class="keyword">def</span> <span class="function">talk</span>(<span class="predefined-constant">self</span>):
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">WOOF!</span><span class="delimiter">&quot;</span></span>
+
+<span class="keyword">class</span> <span class="class">Cat</span>(Pet):
+    <span class="keyword">def</span> <span class="function">talk</span>(<span class="predefined-constant">self</span>):
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">MEOW!</span><span class="delimiter">&quot;</span></span>
+</pre></div>
+</div>
+
+<p>To implement polymorphism you do not <strong>need</strong> a superclass / parent class. It is only when you are using inheritance and polymorphism together that it is useful to ensure that the subclass implements its own version of the method.</p>
+
+<p>For more on polymorphism, check out these articles:</p>
+
+<p><a target="_blank" href="http://blog.thedigitalcatonline.com/blog/2014/08/21/python-3-oop-part-4-polymorphism/#.WBD-PuErLEY">http://blog.thedigitalcatonline.com/blog/2014/08/21/python-3-oop-part-4-polymorphism/#.WBD-PuErLEY</a></p>
+
+<p><a target="_blank" href="https://pythonspot.com/en/polymorphism/">https://pythonspot.com/en/polymorphism/</a></p>
+
+<p><a target="_blank" href="http://stackoverflow.com/questions/409969/polymorphism-define-in-just-two-sentences">http://stackoverflow.com/questions/409969/polymorphism-define-in-just-two-sentences</a></p>
+
+<h3>Add custom properties / methods to built in data types in Python</h3>
+
+<p>In Python, you can&#39;t manipulate base classes for native data types in the same way. However, you can create a new class which extends the built in class, and add methods to the class you&#39;ve created. To do this, you&#39;ll need to import the <code>builtins</code> module and manipulate the class you&#39;re interested in. </p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">builtins</span>
+
+<span class="comment"># Extended subclass</span>
+<span class="keyword">class</span> <span class="class">extend_str</span>(<span class="predefined">str</span>):
+    <span class="keyword">def</span> <span class="function">first_last_character</span>(<span class="predefined-constant">self</span>):
+        <span class="keyword">return</span> <span class="predefined-constant">self</span>[<span class="integer">0</span>] + <span class="predefined-constant">self</span>[-<span class="integer">1</span>]
+
+<span class="comment"># Overwrite the str class on builtins with the custom class defined above</span>
+builtins.str = extend_str
+
+<span class="predefined">str</span>(<span class="octal">0123</span>).first_last_character() <span class="comment"># '03'</span>
+
+<span class="predefined">str</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">awesome</span><span class="delimiter">&quot;</span></span>).first_last_character() <span class="comment"># 'ae'</span>
+
+<span class="string"><span class="delimiter">&quot;</span><span class="content">awesome</span><span class="delimiter">&quot;</span></span>.first_last_character() <span class="comment"># 'str' object has no attribute 'first_last_character'</span>
+</pre></div>
+</div>
+
+<p>Note that in the example above, you can&#39;t use your custom method on strings unless they&#39;re explicitly created by being passed into the <code>str</code> class. In short, this approach is cumbersome and not foolproof. But that&#39;s probably by design: you shouldn&#39;t be trying to modify these classes in the first place!</p>
+
+When you're ready, move on to Object Oriented Programming in Python Exercises
+
+<h1> Object Oriented Programming in Python Exercises
+</h1>
+
+ <h3>Part 1</h3>
+
+<p>Answer the following questions.</p>
+
+<ul>
+<li>What is a class?</li>
+<li>What is an instance?</li>
+<li>What is encapsulation?</li>
+<li>What is abstraction?</li>
+<li>What is inheritance?</li>
+<li>What is multiple inheritance?</li>
+<li>What is polymorphism?</li>
+<li>What is <code>method resolution order</code> or <code>MRO</code>?</li>
+</ul>
+
+<h3>Part 2</h3>
+
+<p>Create a deck of cards class.  Internally, the deck of cards should use another class, a card class.  Your requirements are:</p>
+
+<ul>
+<li>The <code>Deck</code> class should have a <code>deal</code> method to deal a single card from the deck</li>
+<li>After a card is dealt, it is removed from the deck.</li>
+<li>There should be a <code>shuffle</code> method which makes sure the deck of cards has all 52 cards and then rearranges them randomly.</li>
+<li>The <code>Card</code> class should have a suit (Hearts, Diamonds, Clubs, Spades) and a value (A,2,3,4,5,6,7,8,9,10,J,Q,K)</li>
+</ul>
+
+<p>For solutions to these exercises, click <a target="_blank" href="https://github.com/rithmschool/python_fundamentals_part_2_solutions/tree/master/object_oriented_programming_with_python">here</a>.</p>
+
+When you're ready, move on to File I/O Introduction
+
+<h1>File I/O Introduction
+</h1>
+
+<h3>Objectives:</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Read and write to text files</li>
+<li>Explain the purpose of a <code>with</code> statement</li>
+<li>Explain the different ways to open a file depending on whether you want to read, write, or append</li>
+</ul>
+
+<h3>Definitions</h3>
+
+<p>Python has a lot of functionality to help you manipulate text files. In this chapter we&#39;ll explore some of this functionality. Before we do so, here are three terms you should know, as we&#39;ll be using them frequently when discussing file IO (input/output).</p>
+
+<p><strong>Reading</strong> - Getting data from a file.  The data can be stored and manipulated in your program.</p>
+
+<p><strong>Writing</strong> - Saving new data to a file.</p>
+
+<p><strong>Cursor</strong> - When you read a file, a cursor gets created (just like a cursor when you are typing). You can&#39;t see this cursor, but this is how you can tell a file where to start reading from. Once the cursor is at the end of a file, you can not read it anymore unless you explicitly go back to the beginning</p>
+
+<h3>Reading</h3>
+
+<p>Let&#39;s start by creating a text file called <code>first.txt</code> and placing the following text inside of it:</p>
+<div class="CodeRay">
+  <div class="code"><pre>This is a very simple text file!
+</pre></div>
+</div>
+
+<p>Now let&#39;s make a file called <code>read.py</code> and add the following.</p>
+<div class="CodeRay">
+  <div class="code"><pre>file = <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">first.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">r</span><span class="delimiter">'</span></span>)
+print(<span class="predefined">file</span>.read())
+</pre></div>
+</div>
+
+<p>We just opened a file called <code>first.txt</code> for reading (that&#39;s what the second argument of <code>&#39;r&#39;</code> indicates). After opening the file and storing it in a variable called <code>file</code>, we call the <code>read</code> function on it, which allows us to move our cursor from the beginning to the end. Finally, we&#39;re not just reading the file; we&#39;re printing out the results of that read operation. If you run <code>python3 read.py</code> in Terminal (from the directory where <code>read.py</code> lives), you should see the text of the file in the terminal!</p>
+
+<p>If we try to make invoke <code>file.read()</code> a second time, we just get an empty string back. This is because the cursor is at the end of the file and there is no more to read. In order to read the file again, we&#39;ll need to go back to the beginning of the file using <code>seek</code>. Hop into the Python REPL by typing <code>python3</code> in the terminal, then execute the following code:</p>
+<div class="CodeRay">
+  <div class="code"><pre>file = <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">first.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">r</span><span class="delimiter">'</span></span>)
+
+<span class="comment"># type in the following commands</span>
+
+<span class="predefined">file</span>.read() <span class="comment"># we see all our test</span>
+<span class="predefined">file</span>.read() <span class="comment"># nothing now!</span>
+
+<span class="predefined">file</span>.seek(<span class="integer">0</span>) <span class="comment"># move the cursor back to the beginning</span>
+<span class="predefined">file</span>.read() <span class="comment"># there it is!</span>
+</pre></div>
+</div>
+
+<p>But we&#39;re not done yet, if we look at <code>file.closed</code> we will see the value is <code>False</code>. So we opened our file, but we never closed it! Let&#39;s always make sure we close the file!</p>
+<div class="CodeRay">
+  <div class="code"><pre>file = <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">first.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">r</span><span class="delimiter">'</span></span>)
+
+<span class="comment"># type in the following commands</span>
+
+<span class="predefined">file</span>.read() <span class="comment"># we see all our test</span>
+<span class="predefined">file</span>.read() <span class="comment"># nothing now!</span>
+
+<span class="predefined">file</span>.seek(<span class="integer">0</span>) <span class="comment"># move the cursor back to the beginning</span>
+<span class="predefined">file</span>.read() <span class="comment"># there it is!</span>
+
+<span class="predefined">file</span>.closed <span class="comment"># False</span>
+<span class="predefined">file</span>.close()
+<span class="predefined">file</span>.closed <span class="comment"># True</span>
+
+<span class="predefined">file</span>.read() <span class="comment"># ValueError: I/O operation on closed file</span>
+</pre></div>
+</div>
+
+<p>Note: for multiline files, you can read one line at a time using the <code>readline</code> method.</p>
+
+<h3>keyword <code>with</code></h3>
+
+<p>Instead of worrying about closing the file each time, we can use a <code>with</code> block, which will automatically close the file after the operation. Let&#39;s see what that looks like:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">first.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">r</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> <span class="predefined">file</span>:
+    data = <span class="predefined">file</span>.read()
+    print(data)
+
+<span class="predefined">file</span>.closed <span class="comment"># True</span>
+</pre></div>
+</div>
+
+<h3>Writing</h3>
+
+<p>In the previous examples, we&#39;ve seen that the <code>open</code> function takes two parameters. The first is the path to the text file. But what&#39;s the second? Here is where we tell Python what we intend to do with the file. Here are the options for what we can pass in:</p>
+
+<ul>
+<li><code>r</code> use this when you only want to read the file.</li>
+<li><code>r+</code> use this when you want to read and write to the file. In this case, if you write to the file, you&#39;ll overwrite any existing characters while you&#39;re writing based on the location of the cursor, but once you&#39;ve finished writing, other characters will be unaffected.</li>
+<li><code>a</code> use this when you want to <em>append</em> to the file (text that&#39;s already in the file won&#39;t be affected)</li>
+<li><code>a+</code> use this when you want to read the file and append to it.</li>
+<li><code>w</code> use this when you want to <em>write</em> to the file. In this case, the file is completely emptied before it&#39;s written to, so the original text data will be lost.</li>
+<li><code>w+</code> use this when you want to write and read to the file.</li>
+</ul>
+
+<p>If you don&#39;t pass anything in to the second argument to <code>open</code>, <code>r</code> will be assumed.</p>
+
+<p>Take a look at these examples to see how these options behave differently:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">first.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">w</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> <span class="predefined">file</span>:
+    <span class="predefined">file</span>.write(<span class="string"><span class="delimiter">'</span><span class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos molestias ea sit veniam, rerum, totam quis eaque excepturi aut, nostrum reiciendis. At, harum quos adipisci magni nesciunt aliquid beatae sit!</span><span class="delimiter">'</span></span>)
+
+<span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">first.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">r</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> <span class="predefined">file</span>:
+    print(<span class="predefined">file</span>.read())
+
+<span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">first.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">r+</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> <span class="predefined">file</span>:
+    <span class="predefined">file</span>.write(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="content">I'm at the beginning</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined">file</span>.seek(<span class="integer">100</span>)
+    <span class="predefined">file</span>.write(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="content">I'm in the middle</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined">file</span>.seek(<span class="integer">0</span>)
+    print(<span class="predefined">file</span>.read())
+
+<span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">first.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">a+</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> <span class="predefined">file</span>:
+    <span class="predefined">file</span>.write(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="content">I'm at the end</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined">file</span>.seek(<span class="integer">0</span>)
+    print(<span class="predefined">file</span>.read())
+
+<span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">first.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">w+</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> <span class="predefined">file</span>:
+    <span class="predefined">file</span>.write(<span class="string"><span class="delimiter">&quot;</span><span class="content">Now everything is overwritten :(</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined">file</span>.seek(<span class="integer">0</span>)
+    print(<span class="predefined">file</span>.read())
+</pre></div>
+</div>
+
+When you're ready, move on to File I/O with CSVs
+
+<h1> File I/O with CSVs</h1>
+
+<h3>Objectives:</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Explain what a CSV file is</li>
+<li>Read and write to CSV files</li>
+</ul>
+
+<h3>CSV with Python</h3>
+
+<p>Aside from reading text files, we can also read <code>csv</code>, or comma separated values. CSV files can be opened in a text editor or more commonly in programs like Microsoft Excel. CSVs are a common format for uploading and downloading data, so understanding how to programmatically work with them is important. Here is an example <code>csv</code> file:</p>
+
+<p><code>pets.csv</code></p>
+<div class="CodeRay">
+  <div class="code"><pre>name,type,age
+Whiskey,dog,3
+Moxie,cat,7
+Mascis,dog,2
+</pre></div>
+</div>
+
+<p>Most languages can actually support files that are separated by any character, not just commas (there is another format called <code>tsv</code> for tab separated values).  Here is an example of a file that is separated by <code>|</code> (we call the character we separate by the &quot;delimiter&quot;):</p>
+
+<p><code>file.csv</code></p>
+<div class="CodeRay">
+  <div class="code"><pre>name|type|age
+Whiskey|dog|3
+Moxie|cat|7
+Mascis|dog|2
+</pre></div>
+</div>
+
+<p>Now, to read <code>csv</code> files, we&#39;ll need to import the <code>csv</code> module and use the <code>csv.reader</code> method. Let&#39;s take a look at an example.</p>
+
+<p>Notice that the file we are reading in the example below,<code>file.csv</code>, is separated by <code>|</code>. Our next step is to read this file using the <code>csv</code> module:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">csv</span>
+
+<span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">file.csv</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> csvfile:
+    reader = csv.reader(csvfile, delimiter=<span class="string"><span class="delimiter">'</span><span class="content">|</span><span class="delimiter">'</span></span>)
+    rows = <span class="predefined">list</span>(reader)
+    <span class="keyword">for</span> row <span class="keyword">in</span> rows:
+        print(<span class="string"><span class="delimiter">'</span><span class="content">, </span><span class="delimiter">'</span></span>.join(row))
+
+<span class="comment"># name, type, age</span>
+<span class="comment"># Whiskey, dog, 3</span>
+<span class="comment"># Moxie, cat, 7</span>
+<span class="comment"># Mascis, dog, 2</span>
+</pre></div>
+</div>
+
+<p>We can also create a dictionary for each row instead of a list, if we use the <code>DictReader</code> method:     </p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">csv</span>
+
+<span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">file.csv</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> csvfile:
+    reader = csv.DictReader(csvfile, delimiter=<span class="string"><span class="delimiter">'</span><span class="content">|</span><span class="delimiter">'</span></span>)
+    rows = <span class="predefined">list</span>(reader)
+    <span class="keyword">for</span> row <span class="keyword">in</span> rows:
+        print(row)
+
+<span class="comment"># {'age': '3', 'name': 'Whiskey', 'type': 'dog'}</span>
+<span class="comment"># {'age': '7', 'name': 'Moxie', 'type': 'cat'}</span>
+<span class="comment"># {'age': '2', 'name': 'Mascis', 'type': 'dog'}        </span>
+</pre></div>
+</div>
+
+<p>Finally, we can also write to <code>csv</code> files in a similar way that we write to plain text files. But rather than creating a <code>reader</code>, you&#39;ll need to create a <code>writer</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">file.csv</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> csvfile:
+    data_writer = csv.writer(csvfile, delimiter=<span class="string"><span class="delimiter">&quot;</span><span class="content">|</span><span class="delimiter">&quot;</span></span>)
+    data_writer.writerow([<span class="string"><span class="delimiter">'</span><span class="content">Bojack</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">Horse</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">50</span><span class="delimiter">'</span></span>])
+</pre></div>
+</div>
+
+<p>As before, you can also write using dictionaries instead of lists. Here&#39;s an example for a new <code>csv</code> that we&#39;re building from scratch.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">newfile.csv</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> csvfile:
+    data = [<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">fav_topic</span><span class="delimiter">'</span></span>]
+    writer = csv.DictWriter(csvfile, fieldnames=data)
+    writer.writeheader() <span class="comment"># this writes the first row with the column headings</span>
+    writer.writerow({
+        <span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">Elie</span><span class="delimiter">'</span></span>,
+        <span class="string"><span class="delimiter">'</span><span class="content">fav_topic</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">Writing to CSVs!</span><span class="delimiter">'</span></span>     
+    }) 
+</pre></div>
+</div>
+
+<p>To learn more about working with CSVs in Python, you know what to do: check the <a target="_blank" href="https://docs.python.org/3.0/library/csv.html">docs</a>!</p>
+
+When you're ready, move on to File I/O Exercises
+
+<h1>File I/O Exercises
+</h1>
+
+<h3>Part 1 - Text Files</h3>
+
+<p>For the first part of this exercise assume you have a file called <code>students.txt</code> which simply contains a bunch of student names, one name per line. Your goal is to write two functions:</p>
+
+<ul>
+<li><code>add_student</code> - accepts a parameter of <code>first_name</code> and writes to a file called <code>students.txt</code>. </li>
+<li><code>find_student</code> - accepts a parameter of <code>first_name</code> and returns the first student found</li>
+</ul>
+
+<h4>Bonuses</h4>
+
+<ol>
+<li>Write the following additional functions:
+
+<ul>
+<li><code>update_student</code> - accepts a parameter of <code>first_name</code> and <code>new_name</code> and updates first student found</li>
+<li><code>remove_student</code> - accepts a parameter of <code>first_name</code> and removes the student from the text file</li>
+</ul></li>
+<li>Add a unique id for each student so that you can find a student by their id instead of first name (which breaks if you have the same first name for multiple students)</li>
+</ol>
+
+<h3>Part 2 - CSV</h3>
+
+<p>For the next part of this exercise, you will be working with CSVs, so first create a file called <code>users.csv</code> and then work on the following two functions: </p>
+
+<ul>
+<li>one that prints out all of the first and last names in the <code>users.csv</code> file</li>
+<li>one that prompts us to enter a first and last name and adds it to the <code>users.csv</code> file. </li>
+</ul>
+
+<p>For solutions to these exercises, click <a target="_blank" href="https://github.com/rithmschool/python_fundamentals_part_2_solutions/tree/master/file_io">here</a>.</p>
+
+When you're ready, move on to Generators and Iterators
+
+<h1> Generators and Iterators</h1>
+
+<h3>Objectives</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Explain what a generator is and how to create one in Python</li>
+<li>Understand what the <code>yield</code> keyword and <code>next</code> function do</li>
+<li>Define and create iterators using the <code>iter</code> function</li>
+<li>Access values and indexes using <code>enumerate</code></li>
+</ul>
+
+<h3>Generators</h3>
+
+<p>Generator functions are functions that allow us to return multiple times using the <code>yield</code> keyword. This allows us to generate many values over time from a single function. What makes generators so powerful is that unlike other forms of iteration, the values are not all computed upfront so we can suspend our state using the <code>yield</code> keyword and come back to to the function later to continue on. This makes generators a great choice for things like calculating large data sets.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">gensquares</span>(n):
+    <span class="keyword">for</span> num <span class="keyword">in</span> <span class="predefined">range</span>(n):
+        <span class="keyword">yield</span> num**<span class="integer">2</span>
+
+<span class="keyword">for</span> x <span class="keyword">in</span> gensquares(<span class="integer">10</span>):
+    print(x)
+</pre></div>
+</div>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">fib_with_generator</span>(n):
+    a = <span class="integer">1</span>
+    b = <span class="integer">1</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="predefined">range</span>(n):
+        <span class="keyword">yield</span> a
+        <span class="comment"># a,b = b, a+b -&gt; tuple unpacking instead of the three lines below!</span>
+        temp = a
+        a = b
+        b = temp+b
+
+<span class="keyword">for</span> num <span class="keyword">in</span> fib_with_generator(<span class="integer">10</span>):
+    print(num)
+</pre></div>
+</div>
+
+<h3>Using the <code>next</code> function</h3>
+
+<p>Given a generator, you can obtain the next value by calling a special function called <code>next</code> and passing in the generator. Here&#39;s an example:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">use_next</span>():
+    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="predefined">range</span>(<span class="integer">10</span>):
+        <span class="keyword">yield</span> x
+
+gen = use_next()
+print(<span class="predefined">next</span>(gen)) <span class="comment"># 0</span>
+print(<span class="predefined">next</span>(gen)) <span class="comment"># 1</span>
+print(<span class="predefined">next</span>(gen)) <span class="comment"># 2</span>
+</pre></div>
+</div>
+
+<p>In the example above, you can&#39;t call next infinitely many times: eventually you&#39;ll get a <code>StopIteration</code> error (since <code>x</code> inside of <code>use_next</code> only has finitely many values).</p>
+
+<p>However, if you iterate through a generator using something like a <code>for</code> loop, the loop will catch the error so that it doesn&#39;t break your program:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">for</span> val <span class="keyword">in</span> use_next():
+    print(val)
+
+<span class="comment"># 0</span>
+<span class="comment"># 1</span>
+<span class="comment"># 2</span>
+<span class="comment"># 3</span>
+<span class="comment"># 4</span>
+<span class="comment"># 5</span>
+<span class="comment"># 6</span>
+<span class="comment"># 7</span>
+<span class="comment"># 8</span>
+<span class="comment"># 9</span>
+</pre></div>
+</div>
+
+<p>We can also do generator comprehension just like list comprehension by wrapping our comprehension in <code>()</code> to write generator functions with more ease. Here&#39;s how <code>use_next</code> would look as a generator comprehension:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">use_next</span>():
+    <span class="keyword">return</span> (x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="predefined">range</span>(<span class="integer">10</span>))
+</pre></div>
+</div>
+
+<p>You can learn more about generators with these three resources: </p>
+
+<p><a target="_blank" href="http://asmeurer.github.io/python3-presentation/python3-presentation.pdf">http://asmeurer.github.io/python3-presentation/python3-presentation.pdf</a></p>
+
+<p><a target="_blank" href="http://stackoverflow.com/questions/1756096/understanding-generators-in-python">http://stackoverflow.com/questions/1756096/understanding-generators-in-python</a></p>
+
+<p><a target="_blank" href="http://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do-in-python?rq=1">(http://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do-in-python?rq=1</a> </p>
+
+<h3>Iterators</h3>
+
+<p>To make something an iterable (i.e. something you can iterate over) we call the <code>iter</code> function on it. For example, if we wanted strings to be iterators, we could do:</p>
+<div class="CodeRay">
+  <div class="code"><pre>str = <span class="string"><span class="delimiter">&quot;</span><span class="content">hello</span><span class="delimiter">&quot;</span></span>
+str_iter = <span class="predefined">iter</span>(<span class="predefined">str</span>)
+<span class="predefined">next</span>(str_iter) <span class="comment"># h</span>
+<span class="predefined">next</span>(str_iter) <span class="comment"># e</span>
+<span class="predefined">next</span>(str_iter) <span class="comment"># l</span>
+<span class="predefined">next</span>(str_iter) <span class="comment"># l</span>
+<span class="predefined">next</span>(str_iter) <span class="comment"># o</span>
+<span class="predefined">next</span>(str_iter) <span class="comment"># StopIteration Error!</span>
+</pre></div>
+</div>
+
+<p>At this point, you may be wondering: what&#39;s the difference between an iterator and a generator? An iterator is a more general concept: anything in Python with an <code>__next__</code> method used to produce some next value is an iterator. Generators are iterators, but not every iterator is a generator. </p>
+
+<h3>Enumerate</h3>
+
+<p>Sometimes when you iterate through an array, you want access not only to the elements, but also their indices. <code>enumerate</code> exposes both to you. It works by returning a tuple with the (index, value) at each iteration.</p>
+<div class="CodeRay">
+  <div class="code"><pre>list = [<span class="string"><span class="delimiter">&quot;</span><span class="content">first</span><span class="delimiter">&quot;</span></span>,<span class="string"><span class="delimiter">&quot;</span><span class="content">second</span><span class="delimiter">&quot;</span></span>,<span class="string"><span class="delimiter">&quot;</span><span class="content">third</span><span class="delimiter">&quot;</span></span>]
+
+<span class="comment"># How do we get the indices at each iteration? Enumerate!</span>
+
+<span class="keyword">for</span> idx, value <span class="keyword">in</span> <span class="predefined">enumerate</span>(<span class="predefined">list</span>):
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">index is {} and value is {}</span><span class="delimiter">&quot;</span></span>.format(idx,value))
+
+<span class="comment"># index is 0 and value is first</span>
+<span class="comment"># index is 1 and value is second</span>
+<span class="comment"># index is 2 and value is third</span>
+</pre></div>
+</div>
+
+<h3>all and any</h3>
+
+<p>These are both built in functions that all us to check for a boolean matching in an iterable. </p>
+
+<p><strong>all</strong> - returns true if <strong>all</strong> elements are truthy</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="predefined">all</span>([<span class="integer">0</span>]) <span class="comment"># False</span>
+<span class="predefined">all</span>([<span class="integer">0</span>,<span class="integer">1</span>]) <span class="comment"># False</span>
+<span class="predefined">all</span>([<span class="integer">0</span>, <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>, [<span class="integer">1</span>]]) <span class="comment"># False</span>
+<span class="predefined">all</span>([<span class="integer">1</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, [<span class="integer">1</span>]]) <span class="comment"># True</span>
+</pre></div>
+</div>
+
+<p><strong>any</strong> - returns true if <strong>any</strong> elements are truthy</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="predefined">any</span>([<span class="integer">0</span>]) <span class="comment"># False</span>
+<span class="predefined">any</span>([<span class="integer">0</span>,<span class="integer">1</span>]) <span class="comment"># True</span>
+<span class="predefined">any</span>([<span class="integer">0</span>, <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>, [<span class="integer">1</span>]]) <span class="comment"># True</span>
+</pre></div>
+</div>
+
+<h3>Further Reading: Itertools</h3>
+
+<p>To use some more advanced iterators, you can use the <code>itertools</code> module, which you can learn more about <a target="_blank" href="http://www.diveintopython3.net/advanced-iterators.html">here</a>.</p>
+
+When you're ready, move on to Decorators.
+
+<h1> Decorators</h1>
+
+<h3>Objectives</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Understand what a decorator is </li>
+<li>Create your own decorators to add additional functionality to functions</li>
+</ul>
+
+<h3>Decorators</h3>
+
+<p>Decorators are functions that &quot;decorate,&quot; or enhance, other functions. In order to see what this means, let&#39;s first review how we can pass functions to other functions. Remember, everything in Python is an object and objects are first class!</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">shout</span>():
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">WHOA!</span><span class="delimiter">&quot;</span></span>
+
+<span class="keyword">def</span> <span class="function">whisper</span>():
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Shhhh</span><span class="delimiter">&quot;</span></span>
+
+<span class="keyword">def</span> <span class="function">perform_action</span>(func):
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">something is happening</span><span class="delimiter">&quot;</span></span>)
+    <span class="keyword">return</span> func()
+
+perform_action(shout)
+<span class="comment"># something is happening</span>
+<span class="comment"># 'WHOA!'</span>
+
+perform_action(whisper)
+<span class="comment"># something is happening</span>
+<span class="comment"># 'Shhhh'</span>
+</pre></div>
+</div>
+
+<p>We can write the behavior of a decorator like this:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">new_decorator</span>(func):
+    <span class="keyword">def</span> <span class="function">wrap_func</span>():
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">code before func!</span><span class="delimiter">&quot;</span></span>)
+        func()
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">code after func!</span><span class="delimiter">&quot;</span></span>)
+    <span class="keyword">return</span> wrap_func
+
+<span class="keyword">def</span> <span class="function">decorate_me</span>():
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">decorate me!</span><span class="delimiter">&quot;</span></span>)
+
+decorate_me = new_decorator(decorate_me)
+
+decorate_me() <span class="comment"># What do you think this will print?</span>
+</pre></div>
+</div>
+
+<p>Let&#39;s now use the decorator syntax to do the same thing! When you use a decorator, the function being used to decorate is prefixed with an <code>@</code> symbol. The function you&#39;re decorating is then defined below. Take a look:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">new_decorator</span>(func):
+    <span class="keyword">def</span> <span class="function">wrap_func</span>():
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">code before func!</span><span class="delimiter">&quot;</span></span>)
+        func()
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">code after func!</span><span class="delimiter">&quot;</span></span>)
+    <span class="keyword">return</span> wrap_func
+
+<span class="decorator">@new_decorator</span>
+<span class="keyword">def</span> <span class="function">decorate_me</span>():
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">decorate me!</span><span class="delimiter">&quot;</span></span>)
+</pre></div>
+</div>
+
+<p>Note how the code inside of the <code>new_decorator</code> function decorates, or enhances, the code inside of the <code>decorate_me</code> function.</p>
+
+<p>Let&#39;s revisit the first example but refactor it to use decorator syntax.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">perform_action</span>(func):
+    <span class="keyword">def</span> <span class="function">wrap_func</span>():
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">something is happening</span><span class="delimiter">&quot;</span></span>)
+        <span class="keyword">return</span> func()
+    <span class="keyword">return</span> wrap_func
+
+<span class="decorator">@perform_action</span>
+<span class="keyword">def</span> <span class="function">whisper</span>():
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Shhhh</span><span class="delimiter">&quot;</span></span>
+
+<span class="decorator">@perform_action</span>
+<span class="keyword">def</span> <span class="function">shout</span>():
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">WHOA!</span><span class="delimiter">&quot;</span></span>
+
+whisper()
+<span class="comment"># something is happening</span>
+<span class="comment"># 'Shhhh'</span>
+
+shout()
+<span class="comment"># something is happening</span>
+<span class="comment"># 'WHOA!'</span>
+</pre></div>
+</div>
+
+<p>This code will work just fine, but if we examine the <code>__name__</code> or <code>__doc__</code> attribute for our function it will not be correct! </p>
+<div class="CodeRay">
+  <div class="code"><pre>shout.__name__ <span class="comment"># 'wrap_func' - oops!</span>
+</pre></div>
+</div>
+
+<p>We can manually fix this, or we can use the wraps decorator from the functools module.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">from</span> <span class="include">functools</span> <span class="keyword">import</span> <span class="include">wraps</span> 
+
+<span class="keyword">def</span> <span class="function">perform_action</span>(func):
+    <span class="decorator">@wraps</span>(func)
+    <span class="keyword">def</span> <span class="function">wrap_func</span>():
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">something is happening</span><span class="delimiter">&quot;</span></span>)
+        <span class="keyword">return</span> func()
+    <span class="keyword">return</span> wrap_func
+
+<span class="decorator">@perform_action</span>
+<span class="keyword">def</span> <span class="function">whisper</span>():
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Shhhh</span><span class="delimiter">&quot;</span></span>
+
+<span class="decorator">@perform_action</span>
+<span class="keyword">def</span> <span class="function">shout</span>():
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">WHOA!</span><span class="delimiter">&quot;</span></span>
+
+shout.__name__ <span class="comment"># 'shout' - much better   </span>
+</pre></div>
+</div>
+
+When you're ready, move on to Lambdas and Dates
+<h1>Lambdas and Dates </h1>
+
+<h3>Objectives</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Create and use <code>lambdas</code></li>
+<li>Manipulate dates and times using the <code>datetime</code> module</li>
+</ul>
+
+<h3>Lambdas</h3>
+
+<p>The closest we have to &quot;anonymous&quot; functions in Python is lambdas. Lambdas are useful if you want to write a function which can be described in a single line of code. Here are some examples:</p>
+<div class="CodeRay">
+  <div class="code"><pre>add = <span class="keyword">lambda</span> x,y: x + y
+double = <span class="keyword">lambda</span> val: <span class="integer">2</span> * val
+yell = <span class="keyword">lambda</span> <span class="predefined">str</span>: <span class="predefined">str</span>.upper() + <span class="string"><span class="delimiter">&quot;</span><span class="content">!!!</span><span class="delimiter">&quot;</span></span>
+
+add(<span class="integer">1</span>,<span class="integer">2</span>) <span class="comment"># 3</span>
+double(<span class="integer">5</span>) <span class="comment"># 10</span>
+yell(<span class="string"><span class="delimiter">&quot;</span><span class="content">hello</span><span class="delimiter">&quot;</span></span>) <span class="comment"># 'HELLO!!!'</span>
+
+add.__name__ <span class="comment"># '&lt;lambda&gt;' </span>
+add.__name__ == double.__name__ <span class="comment"># True</span>
+</pre></div>
+</div>
+
+<p>Lambda functions start with the keyword <code>lambda</code>. Next comes a comma separated list of arguments, then a colon, then the expression you want the lambda to return. For simple one-line functions, lambdas can be a convenient shorthand for the traditional function definition. But these functions are anonymous; as you can see, they all share the same name. </p>
+
+<p>One use case for lambdas is when you want to apply <code>map</code>, <code>filter</code>, or <code>reduce</code> (which as of Python 3 is part of the <code>functools</code> module). Here are some examples:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">from</span> <span class="include">functools</span> <span class="keyword">import</span> <span class="include">reduce</span>
+a = [<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>,<span class="integer">4</span>,<span class="integer">5</span>]
+
+<span class="predefined">reduce</span>(<span class="keyword">lambda</span> x,y:x+y, a) <span class="comment"># 15</span>
+
+<span class="predefined">list</span>(<span class="predefined">map</span>(<span class="keyword">lambda</span> x:x*<span class="integer">2</span>, a)) <span class="comment"># [2,4,6,8,10]</span>
+<span class="predefined">list</span>(<span class="predefined">filter</span>(<span class="keyword">lambda</span> x:x*<span class="integer">2</span> &gt; <span class="integer">5</span>, a)) <span class="comment"># [3,4]</span>
+</pre></div>
+</div>
+
+<h3>Dates + Times using the Datetime class</h3>
+
+<p>There is a quite a bit of functionality we have around dates and times with Python, but for now we&#39;ll stick to a few simple examples. Make sure you import the <code>datetime</code> module.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">datetime</span>
+
+<span class="comment"># times</span>
+<span class="comment"># hour, minute, second</span>
+t = datetime.time(<span class="integer">1</span>, <span class="integer">25</span>, <span class="integer">10</span>)
+t.hour <span class="comment"># 1</span>
+t.microsecond <span class="comment"># 0 </span>
+
+datetime.time.min <span class="comment"># 00:00:00</span>
+
+today = datetime.date.today()
+today.timetuple() <span class="comment">#namedtuple with data about date</span>
+today.day
+</pre></div>
+</div>
+
+When you're ready, move on to Generators, Iterators and Decorators Exercises
+
+<h1>Generators, Iterators and Decorators Exercises</h1>
+
+<p>Implement the following functions:</p>
+
+<h3><code>get_next_multiple</code></h3>
+
+<p>This function should accept a number and return the next number that is divisible by it.</p>
+<div class="CodeRay">
+  <div class="code"><pre>gen_multiple_of_two = get_next_multiple(<span class="integer">2</span>)
+<span class="predefined">next</span>(gen_multiple_of_two) <span class="comment"># 2</span>
+<span class="predefined">next</span>(gen_multiple_of_two) <span class="comment"># 4</span>
+<span class="predefined">next</span>(gen_multiple_of_two) <span class="comment"># 6</span>
+<span class="predefined">next</span>(gen_multiple_of_two) <span class="comment"># 8</span>
+
+gen_multiple_of_thirteen = get_next_multiple(<span class="integer">13</span>)
+
+<span class="predefined">next</span>(gen_multiple_of_thirteen) <span class="comment"># 13</span>
+<span class="predefined">next</span>(gen_multiple_of_thirteen) <span class="comment"># 26</span>
+<span class="predefined">next</span>(gen_multiple_of_thirteen) <span class="comment"># 39</span>
+<span class="predefined">next</span>(gen_multiple_of_thirteen) <span class="comment"># 52</span>
+</pre></div>
+</div>
+
+<h3><code>is_prime</code></h3>
+
+<p>This function should accept a number and return True or False if the number is a prime number. </p>
+<div class="CodeRay">
+  <div class="code"><pre>is_prime(<span class="integer">11</span>) <span class="comment"># True</span>
+is_prime(<span class="integer">122</span>) <span class="comment"># False</span>
+</pre></div>
+</div>
+
+<h3><code>get_next_prime</code></h3>
+
+<p>This function should return a generator that yields in the next prime number. The highest it should go should be 1000.</p>
+<div class="CodeRay">
+  <div class="code"><pre>gen = get_next_prime()
+
+<span class="predefined">next</span>(gen)
+</pre></div>
+</div>
+
+<h3><code>double_result</code></h3>
+
+<p>This decorator function should return the result of another function multiplied by two</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">add</span>(a,b):
+    <span class="keyword">return</span> a+b
+
+add(<span class="integer">5</span>,<span class="integer">5</span>) <span class="comment"># 10</span>
+
+<span class="decorator">@double_result</span>
+<span class="keyword">def</span> <span class="function">add</span>(a,b):
+    <span class="keyword">return</span> a+b
+
+add(<span class="integer">5</span>,<span class="integer">5</span>) <span class="comment"># 20</span>
+</pre></div>
+</div>
+
+<h3><code>only_even_parameters</code></h3>
+
+<p>This decorator function should only allow a function to have even parameters or else return the string &quot;Please only use even numbers!&quot;</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="decorator">@only_even_parameters</span>
+<span class="keyword">def</span> <span class="function">add</span>(a,b):
+    <span class="keyword">return</span> a+b
+
+add(<span class="integer">5</span>,<span class="integer">5</span>) <span class="comment"># &quot;Please add even numbers!&quot;</span>
+add(<span class="integer">4</span>,<span class="integer">4</span>) <span class="comment"># 8</span>
+
+<span class="decorator">@only_even_parameters</span>
+<span class="keyword">def</span> <span class="function">multiply</span>(a,b,c,d,e):
+    <span class="keyword">return</span> a*b*c*d*e
+</pre></div>
+</div>
+
+<h3><code>sum_index</code></h3>
+
+<p>This function should accept a list or tuple and return the sum of each index. As a bonus, make this function able to accept a variable number of arguments.</p>
+<div class="CodeRay">
+  <div class="code"><pre>sum_index([<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>,<span class="integer">4</span>]) <span class="comment"># 6</span>
+</pre></div>
+</div>
+
+<h3><code>zip</code></h3>
+
+<p>Research the built in <code>zip</code> method, what does it do? Start <a target="_blank" href="http://pavdmyt.com/python-zip-fu/">here</a></p>
+
+<p>For solutions to these exercises, click <a target="_blank" href="https://github.com/rithmschool/python_fundamentals_part_2_solutions/blob/master/generators_iterators_and_decorators/solutions.py">here</a>.</p>
+
+When you're ready, move on to Web Scraping
+
+<h1> Web Scraping </h1>
+
+<h3>Objectives</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Understand what web scraping is useful for</li>
+<li>Describe why <code>robots.txt</code> is important when scraping</li>
+<li>Use <code>BeautifulSoup</code> to scrape web sites</li>
+</ul>
+
+<h3>Web Scraping</h3>
+
+<p>Web scraping is the process of downloading and extracting data from a website.  There are 3 main steps in scraping:</p>
+
+<ol>
+<li>Downloading the HTML document from a website</li>
+<li>Extracting data from the downloaded HTML</li>
+<li>Doing something with the data (usually saving it somehow)</li>
+</ol>
+
+<p>Typically, you would want to access the data using a website&#39;s API, but often websites don&#39;t provide this programmatic access. When a website doesn&#39;t provide a programmatic way to download data (like an API) web scraping is a great way to solve the problem!</p>
+
+<h3>Robots.txt</h3>
+
+<p>Before you begin web scraping, it is a best practice to understand and honor the <code>robots.txt</code> file.  The file may exist on any website that you visit and its role is to tell programs (like our web scraper) about rules on what it should and should not download on the site.  Here is Rithm School&#39;s <a target="_blank" href="https://www.rithmschool.com/robots.txt">robots.txt</a> file.  As you can see, it doesn&#39;t provide any restrictions.  Compare that file to Craigslist&#39;s <a target="_blank" href="http://craigslist.org/robots.txt">robots.txt</a> file which is much more restrictive on what can be downloaded by a program.</p>
+
+<p>You can find out more information about the robots.txt file at <a target="_blank" href="http://www.robotstxt.org/robotstxt.html">http://www.robotstxt.org/robotstxt.html</a></p>
+
+<h3>Beautiful Soup</h3>
+
+<p>The library we will be using for web scraping is called <code>BeautifulSoup</code>, which you can install using <code>pip3 install beautifulsoup4</code>.  You can read more about it <a target="_blank" href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/#quick-start">here</a>.</p>
+
+<p>Keeping in mind that there are 3 steps to web scraping, <code>BeautifulSoup</code> is a tool that helps with the second step, extracting data from the downloaded HTML.  Without a tool like <code>BeautifulSoup</code> the job of extracting data out of HTML is a very hard problem.</p>
+
+<p>Here is an example of <code>BeautifulSoup</code> in action.  The code uses <code>find_all</code> and <code>text</code> to access the names in the li elements:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">bs4</span>
+html = <span class="string"><span class="delimiter">&quot;&quot;&quot;</span><span class="content">
+</span><span class="content">&lt;html&gt;</span><span class="content">
+</span><span class="content">&lt;body&gt;</span><span class="content">
+</span><span class="content">  &lt;h3&gt;Names&lt;/h3&gt;</span><span class="content">
+</span><span class="content">  &lt;ul&gt;</span><span class="content">
+</span><span class="content">    &lt;li&gt;Tim&lt;/li&gt;</span><span class="content">
+</span><span class="content">    &lt;li&gt;Matt&lt;/li&gt;</span><span class="content">
+</span><span class="content">    &lt;li&gt;Elie&lt;/li&gt;</span><span class="content">
+</span><span class="content">    &lt;li&gt;Janey&lt;/li&gt;</span><span class="content">
+</span><span class="content">  &lt;/ul&gt;</span><span class="content">
+</span><span class="content">&lt;/body&gt;</span><span class="content">
+</span><span class="content">&lt;/html&gt;</span><span class="content">
+</span><span class="delimiter">&quot;&quot;&quot;</span></span>
+
+soup = bs4.BeautifulSoup(html, <span class="string"><span class="delimiter">&quot;</span><span class="content">html.parser</span><span class="delimiter">&quot;</span></span>)
+
+<span class="keyword">for</span> li <span class="keyword">in</span> soup.find_all(<span class="string"><span class="delimiter">'</span><span class="content">li</span><span class="delimiter">'</span></span>):
+    print(li.text)
+
+</pre></div>
+</div>
+
+<p>Notice that we&#39;re using <code>BeautifulSoup</code> and passing it two parameters: the html is the first and the type of parser is the second.  For our purposes, the <code>html.parser</code> will work well.</p>
+
+<p>Next, let&#39;s use <code>BeautifulSoup</code> to find an element by id:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">bs4</span>
+html = <span class="string"><span class="delimiter">&quot;&quot;&quot;</span><span class="content">
+</span><span class="content">&lt;html&gt;</span><span class="content">
+</span><span class="content">&lt;body&gt;</span><span class="content">
+</span><span class="content">  &lt;div id=&quot;interesting-data&quot;&gt;Moxie is my cat&lt;/div&gt;</span><span class="content">
+</span><span class="content">&lt;/body&gt;</span><span class="content">
+</span><span class="content">&lt;/html&gt;</span><span class="content">
+</span><span class="delimiter">&quot;&quot;&quot;</span></span>
+
+soup = bs4.BeautifulSoup(html, <span class="string"><span class="delimiter">&quot;</span><span class="content">html.parser</span><span class="delimiter">&quot;</span></span>)
+
+div = soup.find(id=<span class="string"><span class="delimiter">&quot;</span><span class="content">interesting-data</span><span class="delimiter">&quot;</span></span>)
+print(div.text)
+</pre></div>
+</div>
+
+<p>Here are some other useful elements that you can take advantage of in <code>BeautifulSoup</code>:</p>
+
+<p><code>.select()</code> - find an element / elements using CSS selectors.</p>
+
+<p><code>.children</code> - find all children of an element</p>
+
+<p><code>.parent</code> - find the parent element of a specific element</p>
+
+<h3>Downloading And Scraping a Page</h3>
+
+<p>Now that we&#39;re familiar with <code>BeautifulSoup</code>, we are going to download real html from a site and scrape some data!</p>
+
+<p>Create a file called <code>first_scraping.py</code> and add the following (make sure you <code>pip3 install beautifulsoup4</code> first).</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">urllib.request</span>
+<span class="keyword">import</span> <span class="include">bs4</span>
+
+url = <span class="string"><span class="delimiter">'</span><span class="content">https://news.ycombinator.com/</span><span class="delimiter">'</span></span>
+data = urllib.request.urlopen(url).read()
+soup = bs4.BeautifulSoup(data, <span class="string"><span class="delimiter">&quot;</span><span class="content">html.parser</span><span class="delimiter">&quot;</span></span>)
+
+links = soup.select(<span class="string"><span class="delimiter">&quot;</span><span class="content">a.storylink</span><span class="delimiter">&quot;</span></span>)
+
+<span class="keyword">for</span> link <span class="keyword">in</span> links:
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">{} {}</span><span class="delimiter">&quot;</span></span>.format(link[<span class="string"><span class="delimiter">'</span><span class="content">href</span><span class="delimiter">'</span></span>],link.text))
+</pre></div>
+</div>
+
+<p>Now run <code>python3 first_scraping.py</code> and examine the data you scraped!</p>
+
+<h3>Saving Scraped Data To CSV</h3>
+
+<p>Let&#39;s modify the previous example and save our results to a TSV file (We chose TSV, tab separated values, because the article titles often have commas in them):</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">urllib.request</span>
+<span class="keyword">import</span> <span class="include">bs4</span>
+<span class="keyword">import</span> <span class="include">csv</span>
+
+url = <span class="string"><span class="delimiter">'</span><span class="content">https://news.ycombinator.com/</span><span class="delimiter">'</span></span>
+data = urllib.request.urlopen(url).read()
+soup = bs4.BeautifulSoup(data, <span class="string"><span class="delimiter">&quot;</span><span class="content">html.parser</span><span class="delimiter">&quot;</span></span>)
+
+links = soup.select(<span class="string"><span class="delimiter">&quot;</span><span class="content">a.storylink</span><span class="delimiter">&quot;</span></span>)
+
+<span class="keyword">with</span> <span class="predefined">open</span>(<span class="string"><span class="delimiter">'</span><span class="content">articles.tsv</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">w</span><span class="delimiter">'</span></span>) <span class="keyword">as</span> tsvfile:
+    writer = csv.writer(tsvfile, delimiter=<span class="string"><span class="delimiter">&quot;</span><span class="char">\t</span><span class="delimiter">&quot;</span></span>)
+    writer.writerow( (<span class="string"><span class="delimiter">'</span><span class="content">Link</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Title</span><span class="delimiter">'</span></span>) )
+    <span class="keyword">for</span> link <span class="keyword">in</span> links:
+        writer.writerow( (link[<span class="string"><span class="delimiter">'</span><span class="content">href</span><span class="delimiter">'</span></span>], link.text) )
+
+</pre></div>
+</div>
+
+<p>Great! Now you&#39;ve done all 3 steps of scaping: downloading, extracting and saving!</p>
+
+When you're ready, move on to Server Side HTTP Requests
+
+<h1>Server Side HTTP Requests</h1>
+
+<h3>Objectives</h3>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+<li>Use the <code>requests</code> module to perform server side requests</li>
+<li>Compare and contrast client and server side API requests</li>
+</ul>
+
+<h3>Requests</h3>
+
+<p>In this section, we will be using terms like HTTP, APIs, AJAX and headers. If you are not familiar with these terms, take a look at the section on How The Web Works in our Intermediate JavaScript Part II course. </p>
+
+<p>Using Python, we can make make HTTP requests to send and retrieve data from APIs. Although we can do this with JavaScript as well (using a technology called AJAX), using JavaScript will not always work because of security reasons. </p>
+
+<p>Instead, we can make requests from one server to another server (and if you are comfortable with JavaScript, you can send back a response to the browser from &quot;our&quot; server). Here is what that might look like.</p>
+
+<p>To issue server side requests we use the <code>requests</code> module, which you can install using <code>pip3 install requests</code>. You can read more about it <a target="_blank" href="http://docs.python-requests.org/en/master/">here</a>.</p>
+
+<p>Let&#39;s start with a very simple example to get data from the OMDB API.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">requests</span>
+
+<span class="comment"># Make an HTTP GET request to a specific URL</span>
+r = requests.get(<span class="string"><span class="delimiter">'</span><span class="content">http://omdbapi.com?t=titanic</span><span class="delimiter">'</span></span>) <span class="comment"># returns a response object</span>
+r.status_code <span class="comment"># 200</span>
+r.ok <span class="comment"># True</span>
+r.headers <span class="comment"># see a dictionary of HTTP headers</span>
+r.json() <span class="comment"># Examine what this data looks like in JSON</span>
+</pre></div>
+</div>
+
+<p>We can also use the requests module to make a POST request:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">import</span> <span class="include">requests</span>
+
+payload = <span class="predefined">dict</span>(id=<span class="integer">1</span>)
+
+r = requests.post(<span class="string"><span class="delimiter">'</span><span class="content">some_url</span><span class="delimiter">'</span></span>, params=payload)
+
+r.text <span class="comment"># see your params in an args dictionary</span>
+</pre></div>
+</div>
+
+<p>The requests module is very useful for sending and retrieving data from an API and can also be used to authenticate users (logging in through Facebook / Twitter / etc.).</p>
+
+When you're ready, move on to Web Scraping Exercises
+
+<h1>Web Scraping Exercises</h1>
+<h3>Part 1 - Web Scraping</h3>
+
+<p>Write a Python program that uses BeautifulSoup to go to <code>https://news.google.com</code> and prints out all of the headlines on the page. Then, write a function called <code>find_headline_by_keyword</code> which lets you search through those headlines for keywords, and returns to you a list of all of the headlines that match all the keywords you provide.</p>
+
+<h3>Part 2 - Web Scraping + File IO</h3>
+
+<p><a target="_blank" href="https://en.wikipedia.org/wiki/United_States_presidential_election">This</a> Wikipedia page has a table with data on all of the US Presidential elections. Our goal is to use Beautiful Soup to scrape some of this data into a CSV file. The columns of the CSV should be: order, year, winner, winner electoral votes, runner-up, and runner-up electoral votes. Use commas as the delimiter. For instance, after the header row, the first row of data should look like this:</p>
+<div class="CodeRay">
+  <div class="code"><pre>1st,1788–1789,George Washington,69,John Adams,34
+</pre></div>
+</div>
+
+<p>(Hint: use the <code>pdb</code> debugger! Setting break points is a great way to experiment with your code to make sure that you&#39;re selecting the right elements and correctly targeting the text that you&#39;re interested in.)</p>
+
+<h3>Part 3 - Server Side Requests</h3>
+
+<p>Using the <code>requests</code> module and the <a target="_blank" href="https://www.omdbapi.com/">OMDB API</a>, build an application that prompts the user for two pieces of information, the name of an actor/actress and a movie. Your program should tell the user if that actor or actress was in that movie (this will only work for leading actors and actresses). As a bonus, add functionality to tell users who the director and writer of a movie were.</p>
+
+<p>For solutions to these exercises, click <a target="_blank" href="https://github.com/rithmschool/python_fundamentals_part_2_solutions/blob/master/web_scraping_and_server_side_requests/part_3_solution.py">here</a>.</p>
