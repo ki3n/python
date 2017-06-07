@@ -8,7 +8,7 @@ Topics Covered
     <li>Functions</li>
 
  <li>Modules and Debugging</li>
-  <li>Object Oriented Programmings</li>
+  <li>Object Oriented Programming</li>
    <li>File I/O</li>
     <li>Generators, Iterators and Decorators</li>
      <li>Lambdas and Dates</li>
@@ -1289,8 +1289,7 @@ When you're ready, move on to Dictionary Exercises
 <h1> Dictionary Exercises. </h1>
 
 
-    <div data-locked-chapter="false" data-unit="3" id="course-content">
-      <p>Write the following Python code to do the following (Complete ALL of the following using <code>dictionary comprehension</code>)</p>
+<p>Write the following Python code to do the following (Complete ALL of the following using <code>dictionary comprehension</code>)</p>
 
 <ol>
 <li>Given a list <code>[(&quot;name&quot;, &quot;Elie&quot;), (&quot;job&quot;, &quot;Instructor&quot;)]</code>, create a dictionary that looks like this <code>{&#39;job&#39;: &#39;Instructor&#39;, &#39;name&#39;: &#39;Elie&#39;}</code> (the order does not matter).</li>
