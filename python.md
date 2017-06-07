@@ -1,3 +1,16 @@
+<h1>Python Fundamentals I & II </h1>
+From Rithm School.
+## To Learn: 
+- [ ] Mercury
+- [x] Venus
+- [x] Earth (Orbit/Moon)
+- [x] Mars
+- [ ] Jupiter
+- [ ] Saturn
+- [ ] Uranus
+- [ ] Neptune
+- [ ] Comet Haley
+
 <h1>Python History and Installation</h1>
 <p>By the end of this chapter, you should be able to:</p>
 
@@ -1888,7 +1901,7 @@ When you're ready, move on to Debugging Python
 
 <h1>Debugging Python</h1>
 
-      <h3>Objectives:</h3>
+<h3>Objectives:</h3>
 
 <p>By the end of this chapter, you should be able to:</p>
 
